@@ -290,15 +290,15 @@ akkor a program a következő XML struktúrát hozza létre a szóhoz:
 ```
 <tsv2xml>
 	<s id="s1">
-	<w ID="s1w1" LEMMA="s1wthey" HEAD="s1w2">
-		<FORM>They</FORM>
-		<UPOS>PRON</UPOS>
-		<XPOS>PRP</XPOS>
-		<FEATS>Case=Nom|Number=Plur</FEATS>
-		<DEPREL>nsubj</DEPREL>
-		<DEPS>2:nsubj|4:nsubj</DEPS>
-	</w>
-...
+		<w ID="s1w1" LEMMA="s1wthey" HEAD="s1w2">
+			<FORM>They</FORM>
+			<UPOS>PRON</UPOS>
+			<XPOS>PRP</XPOS>
+			<FEATS>Case=Nom|Number=Plur</FEATS>
+			<DEPREL>nsubj</DEPREL>
+			<DEPS>2:nsubj|4:nsubj</DEPS>
+		</w>
+	...
 ```
 
 
