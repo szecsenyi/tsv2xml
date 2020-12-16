@@ -288,7 +288,6 @@ id:ID	FORM	id:LEMMA	UPOS	XPOS	FEATS	id:HEAD	DEPREL	DEPS	MISC
 akkor a program a következő XML struktúrát hozza létre a szóhoz:
 
 ```
-<w>
 <tsv2xml>
 	<s id="s1">
 	<w ID="s1w1" LEMMA="s1wthey" HEAD="s1w2">
@@ -299,7 +298,7 @@ akkor a program a következő XML struktúrát hozza létre a szóhoz:
 		<DEPREL>nsubj</DEPREL>
 		<DEPS>2:nsubj|4:nsubj</DEPS>
 	</w>
-</w>
+...
 ```
 
 
