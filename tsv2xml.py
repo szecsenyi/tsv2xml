@@ -2,8 +2,8 @@
 # coding: utf-8
 
 # # tsv2xml.py
-# ver 1.0  
-# (c) Szécsényi Tibor  
+# ver 1.01 05-03-2021  
+# (c) Szécsényi Tibor 2020  
 # TAB szeparált szövegfájlt XML fájllá alakít
 
 # ## Környezeti változók
@@ -183,7 +183,7 @@ def readSentence():
 
 
 snum = sIDStart
-inputFile = open(inputFileName, 'r', encoding='utf-8')
+inputFile = open(inputFileName, 'r', encoding='utf-8-sig')
 if tagsInline:
     tagLine = inputFile.readline().rstrip()
     tagList = tagLine.split('\t')
@@ -259,4 +259,10 @@ inputFile.close()
                 
 with open (outputFileName, "wb") as files :
     files.write(doc.toprettyxml(indent ="\t", encoding="utf-8"))
+
+
+# In[ ]:
+
+
+
 
