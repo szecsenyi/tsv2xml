@@ -1,6 +1,6 @@
 # tsv2xml.py
-ver 1.0  
-(c) Szécsényi Tibor 2020  
+ver 1.02  
+(c) Szécsényi Tibor 2021  
   
 A program tab-szeparált szövegfájlból (.tsv) készít XML fájlt.
 
@@ -288,17 +288,18 @@ id:ID	FORM	id:LEMMA	UPOS	XPOS	FEATS	id:HEAD	DEPREL	DEPS	MISC
 akkor a program a következő XML struktúrát hozza létre a szóhoz:
 
 ```
+<w>
 <tsv2xml>
 	<s id="s1">
-		<w ID="s1w1" LEMMA="s1wthey" HEAD="s1w2">
-			<FORM>They</FORM>
-			<UPOS>PRON</UPOS>
-			<XPOS>PRP</XPOS>
-			<FEATS>Case=Nom|Number=Plur</FEATS>
-			<DEPREL>nsubj</DEPREL>
-			<DEPS>2:nsubj|4:nsubj</DEPS>
-		</w>
-	...
+	<w ID="s1w1" LEMMA="s1wthey" HEAD="s1w2">
+		<FORM>They</FORM>
+		<UPOS>PRON</UPOS>
+		<XPOS>PRP</XPOS>
+		<FEATS>Case=Nom|Number=Plur</FEATS>
+		<DEPREL>nsubj</DEPREL>
+		<DEPS>2:nsubj|4:nsubj</DEPS>
+	</w>
+</w>
 ```
 
 
@@ -308,53 +309,55 @@ A program feltételezi, hogy a python 3.x telepítve van a számítógépre, és
 a programfájlt tartalmazó könyvtárból elérhető parancssorból. A programot 
 parancssorból kell meghívni a `python tsv2xml.py` utasítással. A program 
 paraméterek nélkül is futtatható, ekkor az alapértelmezett beállításokkal fut. 
-A program paraméterei `parameter=value` alakban változtathatóak meg. 
+A program paraméterei `-parameter:value` alakban változtathatóak meg. 
 A paraméterek értéke közvetlenül, vagy idézőjelek között is megadható: a kezdő 
 és záró zárójelek nem lesznek figyelembe véve.
 
 A program tipikus paraméteres használata: 
-`python tsv2xml.py input=mytsv01.tsv output=myxml01.xml idpfx=f01s`
+`python tsv2xml.py -input:mytsv01.tsv -output:myxml01.xml -idpfx:f01s`
 
 A használható paraméterek a következők:
 
-### `input`=*filename*
+### `-input`:*filename*
 a feldolgozandó tsv fájl neve. Default: `input.tsv`
 
-### `output`=*filename*
+### `-output`:*filename*
 a kimeneti xml fájl neve. Default: `output.tsv`
 
-### `tagdef`=*filename*
+### `-tagdef`:*filename*
 a címkedefiníciók a filename fájlból származnak a feldolgozandó fájl ekkor nem tartalmaz címkedefiníciót.
 
-### `root`=*tagname*
+### `-root`:*tagname*
 a root tag címkéje. Default: `tsv2xml`
 
-### `stag`=*tagname*
+### `-stag`:*tagname*
 a mondat tag címkéje. Default: `s`
 
-### `wtag`=*tagname*
+### `-wtag`:*tagname*
 a szó tag címkéje. Default: `w`
 
-### `drop`=*char*
+### `-drop`:*char*
 az üres érték jelölője. Default: `_`
 
-### `idpfx`=*string*
+### `-idpfx`:*string*
 az indexek prefixuma. Default: `s`
 
-### `idstart`=*int*
+### `-idstart`:*int*
 ezzel kezdi a mondatok számozását. Default: `1`
 
-### `wpfx`=*string*
+### `-wpfx`:*string*
 az indexekben a mondat és a szó elválasztója. Default: `w`
 
-### `split`=*char*
+### `-split`:*char*
 a többtagú kifejezések elválasztója. Default: `|`
 
-### `attr`=*char*
+### `-attr`:*char*
 az attribútumok és értékek elválasztója. Default: `=`
 
+### `-ctype`:*string*
+a root tag cType attribútumának az értéke: kódolási információt lehet jelölni
 
 
-```
+```python
 
 ```

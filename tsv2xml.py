@@ -2,15 +2,17 @@
 # coding: utf-8
 
 # # tsv2xml.py
-# ver 1.01 05-03-2021  
-# (c) Szécsényi Tibor 2020  
+# ver 1.02 24-04-2021  
+# (c) Szécsényi Tibor 2021  
 # TAB szeparált szövegfájlt XML fájllá alakít
 
 # ## Környezeti változók
 # Ezeket lehet módosítani itt, vagy külső paraméterrel
 
-# In[ ]:
+# In[1]:
 
+
+version = '1.02'
 
 inputFileName = 'input.tsv' 
 # a feldolgozandó .tsv fájl neve
@@ -53,6 +55,10 @@ faSep = '='
 # pl1: 'foo1=bar1|foo2=bar2' -> <w><foo1>bar1</foo1><foo2>bar2</foo2></w>
 # pl2: 'foo1=bar1|foo2=bar2' -> <w foo1="bar1" foo2="bar2" />
 
+cType = None
+# A root tagben jelölhetjük, hogy miféle kódolással van dolgunk
+# Ha a cType nem None, a cType attribútum értéke ez lesz
+
 
 # ## Használt könyvtárak
 
@@ -75,38 +81,40 @@ from xml.dom import minidom
 tagsInline = True
 
 for anArg in sys.argv:
-    if anArg.find('=') != -1:
-        [at,val] = anArg.split('=')
-        if at == 'input':
+    if anArg.find(':') != -1:
+        [at,val] = anArg.split(':')
+        if at == '-input':
             inputFileName = val.strip('"')
-        elif at == 'output':
+        elif at == '-output':
             outputFileName = val.strip('"')
-        elif at == 'root':
+        elif at == '-root':
             rootTag = val.strip('"')
-        elif at == 'stag':
+        elif at == '-stag':
             sentenceTag = val.strip('"')
-        elif at == 'idstart':
+        elif at == '-idstart':
             sIDStart = int(val.strip('"'))
-        elif at == 'wtag':
+        elif at == '-wtag':
             wordTag = val.strip('"')
-        elif at == 'drop':
+        elif at == '-drop':
             dropChar = val.strip('"')
-        elif at == 'idpfx':
+        elif at == '-idpfx':
             idPrefix = val.strip('"')
-        elif at == 'wpfx':
+        elif at == '-wpfx':
             wSep = val.strip('"')
-        elif at == 'split':
+        elif at == '-split':
             mtSep = val.strip('"')
-        elif at == 'attr':
+        elif at == '-attr':
             faSep = val.strip('"')
-        elif at == 'tagdef':
+        elif at == '-tagdef':
             inputFile = open(val.strip('"'), 'r', encoding='utf-8')
             tagLine = inputFile.readline().rstrip()
             tagList = tagLine.split('\t')
             inputFile.close()
             tagsInline = False
+        elif at == '-ctype':
+            cType = val.strip('"')
     elif anArg in ['help', '-help', '-?', '?']:
-        print('tsv2xml 1.0')
+        print('tsv2xml ' + version)
         print('Tabszeparált fájlt XML fájllá alakít.')
         print('A tsv fájl egyes sorait szóként (w) értelmezi, az üres sorok új mondatot (s) kezdenek.')
         print('\n')
@@ -132,22 +140,23 @@ for anArg in sys.argv:
         print('                Az attribútum értéke "s1w2" alakú lesz, ahol 1 a mondat sorszáma, 2 pedig az oszlop értéke.')
         print('Ha egy sorban több oszlop van, mint a címkefelsorolásban, akkor <tag> taggel jelenik meg.')
         print('Az oszlopban található "_" érték üresnek számít, nem generál xml-elemet.\n')
-        print('A program paraméterezhető param=érték kifejezésekkel:')
-        print('  input=filename      - a feldolgozandó tsv fájl neve. Default: ' + inputFileName)
-        print('  output=filename     - a a kimeneti xml fájl neve. Default: ' + outputFileName)
-        print('  tagdef=filename     - a címkedefiníciók a filename fájlból származnak,')
-        print('                        a feldolgozandó fájl ekkor nem tartalmaz címkedefiníciót.')
-        print('  root=tagname        - a root tag címkéje. Default: ' + rootTag)
-        print('  stag=tagname        - a mondat tag címkéje. Default: ' + sentenceTag)
-        print('  wtag=tagname        - a szó tag címkéje. Default: ' + wordTag)
-        print('  drop=char           - az üres érték jelölője. Default: ' + dropChar)
-        print('  idpfx=string        - az indexek prefixuma. Default: ' + idPrefix)
-        print('  idstart=int         - ezzel kezdi a mondatok számozását. Default: ' + str(sIDStart))
-        print('  wpfx=string         - az indexekben a mondat és a szó elválasztója. Default: ' + wSep)
-        print('  split=char          - a többtagú kifejezések elválasztója. Default: ' + mtSep)
-        print('  attr=char           - az attribútumok és értékek elválasztója. Default: ' + faSep + '\n')
+        print('A program paraméterezhető -param:érték kifejezésekkel:')
+        print('  -input:filename      - a feldolgozandó tsv fájl neve. Default: ' + inputFileName)
+        print('  -output:filename     - a a kimeneti xml fájl neve. Default: ' + outputFileName)
+        print('  -tagdef:filename     - a címkedefiníciók a filename fájlból származnak,')
+        print('                         a feldolgozandó fájl ekkor nem tartalmaz címkedefiníciót.')
+        print('  -root:tagname        - a root tag címkéje. Default: ' + rootTag)
+        print('  -stag:tagname        - a mondat tag címkéje. Default: ' + sentenceTag)
+        print('  -wtag:tagname        - a szó tag címkéje. Default: ' + wordTag)
+        print('  -drop:char           - az üres érték jelölője. Default: ' + dropChar)
+        print('  -idpfx:string        - az indexek prefixuma. Default: ' + idPrefix)
+        print('  -idstart:int         - ezzel kezdi a mondatok számozását. Default: ' + str(sIDStart))
+        print('  -wpfx:string         - az indexekben a mondat és a szó elválasztója. Default: ' + wSep)
+        print('  -split:char          - a többtagú kifejezések elválasztója. Default: ' + mtSep)
+        print('  -attr:char           - az attribútumok és értékek elválasztója. Default: ' + faSep + '\n')
+        print('  -ctype:string        - a root tag cType attribútumának az értéke: kódolási információ.\n')
         print('A feldolgozhatatlan adatot tartalmazó szavak "error" attribútumot kapnak.')
-        print('(c) Szécsényi Tibor 2020')
+        print('(c) Szécsényi Tibor 2021')
         sys.exit()
 
 
@@ -196,6 +205,8 @@ if tagsInline:
 
 doc = minidom.Document()
 root = doc.createElement(rootTag)
+if cType != None:
+    root.setAttribute('cType', cType)
 doc.appendChild(root)
 sentenceData = readSentence()
 
